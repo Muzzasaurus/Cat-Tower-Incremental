@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="main.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div id="jobTab" class="mainTab" style="display: flex;">
+        <div id="moneyDisplay">
+            <h2 id="moneyCount">$0</h2>
+            <h3>+0/s</h3>
+        </div>
+        <h2 id="jobLevelDisplay">Job Level 0</h2>
+        <div id="jobProgressContainer">
+            <div id="jobProgress">
+                <h3 id="jobXPDisplay" style="text-align: center;">0/100</h3>
+            </div>
+        </div>
+        <h3 id="jobEffectDisplay">Job Effect: x1</h3>
+        <div id="jobsContainer">
+            <div class="jobContainer">
+                <h2>Job 1</h2>
+                <h3 class="jobIncomeDisplay">Currently: +$1</h3>
+                <div class="singleJobProgressContainer" jobId="1">
+                    <div class="singleJobProgress">
+                        <h2 class="jobTimer">2s</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="jobUpgradesContainer">
+        </div>
+    </div>
+    <div id="towerTab" class="mainTab" style="display: none;">
+
+    </div>
+    <div id="catTab" class="mainTab" style="display: none;">
+
+    </div>
+    <div id="navTab">
+        <ul>
+            <li>
+                <button tabValue="jobTab">Job</button>
+            </li>
+            <li>
+                <button tabValue="towerTab">Tower</button>
+            </li>
+            <li>
+                <button tabValue="catTab">Cats</button>
+            </li>
+        </ul>
+    </div>
+    <div id="progressBar">
+        <h2 id="goalDisplay">Get $100</h2>
+        <div id="goalProgressContainer">
+            <div id="goalProgressBar"></div>
+        </div>
+    </div>
+    <!--<script src="https://cdn.jsdelivr.net/npm/break_infinity.js@2"></script>-->
+    <script src="break_eternity.js" defer></script>
+    <script src="objects.js" defer></script>
+    <script src="view.js" defer></script>
+    <script src="upgrades.js" defer></script>
+    <script src="main.js" defer></script>
+</body>
+</html>

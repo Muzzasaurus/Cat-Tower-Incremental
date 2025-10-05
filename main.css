@@ -1,0 +1,224 @@
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-Thin.ttf);
+    font-weight: 100;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-ExtraLight.ttf);
+    font-weight: 200;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-Light.ttf);
+    font-weight: 300;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-Regular.ttf);
+    font-weight: 400;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-Medium.ttf);
+    font-weight: 500;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-SemiBold.ttf);
+    font-weight: 600;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-Bold.ttf);
+    font-weight: 700;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-ExtraBold.ttf);
+    font-weight: 800;
+}
+@font-face {
+    font-family: barlow;
+    src: url(Assets/Fonts/Barlow-Black.ttf);
+    font-weight: 900;
+}
+
+:root {
+    --job-primary-bg: #e7e7e7;
+    --job-secondary-bg: #bbbbbb;
+    --job-progress-bar: #51dcff;
+    --tower-primary-bg: #c7c7c7;
+    --cat-primary-bg: #a3a3a3;
+    --nav-bg: #929292;
+    --goal-bg: #888888;
+    --goal-progress-bar: #88ff7d;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: barlow;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 1fr 10rem;
+    grid-template-rows: 1fr 5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+p {
+    font-size: 1rem;
+}
+
+#jobTab {
+    background-color: var(--job-primary-bg);
+    flex-direction: column;
+    align-items: center;
+}
+
+#moneyDisplay {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#jobProgressContainer {
+    width: 80%;
+    border: 3px solid black;
+}
+
+#jobProgress {
+    background: linear-gradient(90deg, var(--job-progress-bar) 0%, rgba(0, 0, 0, 0) 0%);
+    padding: 0.25rem 0;
+    width: 100%;
+}
+
+#jobsContainer {
+    width: 90%;
+    height: 60%;
+    border: 3px solid black;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    overflow-y: scroll;
+}
+
+.jobContainer {
+    border: 3px solid black;
+    padding: 0.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 6.5rem;
+}
+
+.singleJobProgressContainer {
+    width: 90%;
+    border: 3px solid black;
+}
+
+.singleJobProgress {
+    background: linear-gradient(90deg, var(--job-progress-bar) 0%, rgba(0, 0, 0, 0) 0%);
+    width: 100%;
+}
+
+.jobTimer {
+    text-align: center;
+    padding: 0.25rem 0;
+}
+
+#jobUpgradesContainer {
+    width: 100%;
+    height: 100%;
+    background-color: var(--job-secondary-bg);
+    margin-top: 2rem;
+    display: flex;
+}
+
+.jobUpgradeContainer {
+    border: 3px solid black;
+    margin: 2rem;
+    width: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.upgradeImage {
+    width: 10rem;
+}
+
+.jobUpgradeButtons {
+    display: flex;
+    gap: 1rem;
+}
+
+.upgradeButton {
+    font-size: 1.25rem;
+    width: 7rem;
+    height: 2.5rem;
+}
+
+.upgradePriceDisplay {
+    font-size: 1.5rem;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    color: white;
+}
+
+#towerTab {
+    background-color: var(--tower-primary-bg);
+}
+
+#catTab {
+    background-color: var(--cat-primary-bg);
+}
+
+#navTab {
+    background-color: var(--nav-bg);
+    grid-row: 1 / -1;
+    grid-column: -2;
+}
+
+#navTab ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+}
+
+#navTab button {
+    width: 100%;
+    height: 3rem;
+    cursor: pointer;
+}
+
+#progressBar {
+    background-color: var(--goal-bg);
+    grid-row: 2 / 3;
+    grid-column: 1 / -2;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0.5rem 0;
+}
+
+#goalProgressContainer {
+    width: 90%;
+    border: 3px solid black;
+}
+
+#goalProgressBar {
+    background: linear-gradient(90deg, var(--goal-progress-bar) 0%, rgba(0, 0, 0, 0) 0%);
+    width: 100%;
+    height: 1.5rem;
+}
