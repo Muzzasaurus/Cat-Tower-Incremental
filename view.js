@@ -57,7 +57,7 @@ function updateJobLevel() {
 function updateJobBars() {
     const bars = document.querySelectorAll('.singleJobProgress');
     for (let i = 0; i < bars.length; i++) {
-        bars[i].style.background = `linear-gradient(90deg, var(--job-progress-bar) ${100-game.jobTimeRemaining[i]/jobTimes[i]*100}%, rgba(0, 0, 0, 0) 0%)`;
+        bars[i].style.background = `linear-gradient(90deg, var(--job-progress-bar) ${100-jobs[i].timeRemaining/jobs[i].currentTime*100}%, rgba(0, 0, 0, 0) 0%)`;
     }
 }
 
@@ -78,15 +78,14 @@ function updateJobNumbers() {
     document.getElementById('moneyCount').innerHTML = `$${formatNum(game.money)}`;
     const jobsTimers = document.getElementsByClassName('jobTimer');
     for (let i = 0; i < jobsTimers.length; i++) {
-        jobsTimers[i].innerHTML = `${formatTimeS(game.jobTimeRemaining[i])}s`;
+        jobsTimers[i].innerHTML = `${formatTimeS(jobs[i].timeRemaining)}s`;
     }
     const jobsIncomes = document.getElementsByClassName('jobIncomeDisplay');
     for (let i = 0; i < jobsIncomes.length; i++) {
-        switch (i) {
-            case 0:
-                jobsIncomes[i].innerHTML = `Currently +$${formatNum(game.job1Income)}`;
-                break;
-        }
+        jobs[i].updateEffect();
+        let displayString = jobs[i].displayEffectString.replace('@', formatNum(jobs[i].displayEffect));
+
+        jobsIncomes[i].innerHTML = `Currently ${displayString}`;
     }
 }
 

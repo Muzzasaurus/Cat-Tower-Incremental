@@ -35,3 +35,48 @@ class Upgrade {
         }
     }
 }
+
+class Job {
+    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString) {
+        this.id = id;
+        this.title = title;
+        this.baseTime = baseTime;
+        this.currentTime = this.baseTime;
+        this.timeRemaining = this.baseTime;
+        this.active = false;
+        this.xpMult = xpMult;
+        this.baseEffect = new Decimal(baseEffect);
+        this.currentEffect = this.baseEffect;
+        this.displayEffect = this.currentEffect;
+        this.effectTriggers = new Decimal(0);
+        this.displayEffectString = displayEffectString;
+    }
+    updateEffect() {
+        this.currentTime = this.baseTime / jobs[1].divideValue.toNumber();
+    }
+    beginJob() {
+        if (!this.active) {
+            this.timeRemaining = this.baseTime;
+            this.active = true;
+        }
+    }
+    updateTime() {
+        if (this.active) {
+            //subtract time
+            this.timeRemaining -= deltaTime/1000;
+            //check if time is less than 0
+            if (this.timeRemaining <= 0) {
+                this.active = false;
+                this.timeRemaining = this.currentTime;
+                this.effectTriggers = this.effectTriggers.plus(1);
+                this.jobEffect();
+            }
+        }
+        if (this.timeRemaining > this.currentTime) {
+            this.timeRemaining = this.currentTime;
+        }
+    }
+    jobEffect() {
+        addJobXP(game.jobXPGain.multiply(this.xpMult));
+    }
+}

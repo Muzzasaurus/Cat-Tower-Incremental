@@ -43,7 +43,7 @@ class Upgrade1 extends Upgrade {
 }
 
 //Income upgrade
-let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>50%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 5, 1.2, 25, 2, 500, 0.5, 'Assets/Images/GCIUpgradeBase.png');
+let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>+50%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 5, 1.2, 25, 2, 1000, 0.5, 'Assets/Images/GCIUpgradeBase.png');
 jobUpgrades.push(upgrade1);
 
 //Create upgrade HTML
@@ -60,7 +60,7 @@ for (let i = 0; i < jobUpgrades.length; i++) {
     upgrade.innerHTML =
     `<h3>${jobUpgrades[i].name}<span style="font-weight: 500; font-size: 1rem;"> - ${levelString}</span></h3>
     <p style="text-align: center;">${displayString}</p>
-    <img class="upgradeImage" src="${jobUpgrades[i].icon}">
+    <img class="upgradeImage" draggable="false" src="${jobUpgrades[i].icon}">
     <h2 class="upgradePriceDisplay">$${jobUpgrades[i].currentPrice}</h2>
     <div class="jobUpgradeButtons">
         <button class="upgradeButton">Buy</button>
