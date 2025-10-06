@@ -42,9 +42,30 @@ class Upgrade1 extends Upgrade {
     }
 }
 
+class Upgrade2 extends Upgrade {
+    buyUpgrade() {
+        super.buyUpgrade();
+        this.calculateEffect();
+    }
+    buyMaxUpgrades() {
+        super.buyMaxUpgrades();
+        this.calculateEffect();
+    }
+    calculateEffect() {
+        if (this.upgradeLevel.notEquals(0)) {
+            this.effectValue = this.upgradeLevel.multiply(this.upgradeEffect).plus(1).multiply(Decimal.pow(this.levelBonusEffect, Decimal.floor(this.upgradeLevel.dividedBy(this.levelBonusMilestone))));
+        } else {
+            this.effectValue = this.upgradeLevel.multiply(this.upgradeEffect).plus(1);
+        }
+    }
+}
+
 //Income upgrade
 let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>+50%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 5, 1.2, 25, 2, 1000, 0.5, 'Assets/Images/GCIUpgradeBase.png');
 jobUpgrades.push(upgrade1);
+
+let upgrade2 = new Upgrade1('basicXP', 'Basic XP', 'Increases job XP earned by <b>+25%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 50, 1.2, 25, 2, 1000, 0.25, 'Assets/Images/GCIUpgradeBase.png');
+jobUpgrades.push(upgrade2);
 
 //Create upgrade HTML
 for (let i = 0; i < jobUpgrades.length; i++) {

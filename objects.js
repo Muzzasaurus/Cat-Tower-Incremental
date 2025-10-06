@@ -37,7 +37,7 @@ class Upgrade {
 }
 
 class Job {
-    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString) {
+    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
         this.id = id;
         this.title = title;
         this.baseTime = baseTime;
@@ -50,12 +50,14 @@ class Job {
         this.displayEffect = this.currentEffect;
         this.effectTriggers = new Decimal(0);
         this.displayEffectString = displayEffectString;
+        this.unlockLevel = new Decimal(unlockLevel);
+        this.unlocked = false;
     }
     updateEffect() {
-        this.currentTime = this.baseTime / jobs[1].divideValue.toNumber();
+        this.currentTime = this.baseTime / jobs.find(x => x.id == 'jobTime').currentEffect.toNumber();
     }
     beginJob() {
-        if (!this.active) {
+        if ((!this.active) && (this.unlocked)) {
             this.timeRemaining = this.baseTime;
             this.active = true;
         }

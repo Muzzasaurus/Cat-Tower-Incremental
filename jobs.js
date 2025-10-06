@@ -15,17 +15,31 @@ class Job1 extends Job {
 }
 
 class Job2 extends Job {
-    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString) {
-        super(id, title, baseTime, xpMult, baseEffect, displayEffectString);
+    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
+        super(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel);
         this.timesActivated = new Decimal(0);
-        this.divideValue = new Decimal(1);
     }
     updateEffect() {
         super.updateEffect();
-        this.currentEffect = this.baseEffect.multiply(game.jobLevelEffect);
-        //this.divideValue = new Decimal(1).multiply(this.timesActivated.multiply(game.jobLevelEffect).dividedBy(100).plus(1));
-        this.divideValue = new Decimal(1).multiply(Decimal.pow(this.timesActivated, 0.5).multiply(game.jobLevelEffect).dividedBy(20).plus(1));
-        this.displayEffect = this.divideValue;
+        this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated, 0.5).multiply(game.jobLevelEffect).dividedBy(40).plus(1));
+        this.displayEffect = this.currentEffect;
+    }
+    jobEffect() {
+        super.jobEffect();
+        this.timesActivated = this.timesActivated.plus(1);
+        this.effectTriggers = new Decimal(0);
+    }
+}
+
+class Job3 extends Job {
+    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
+        super(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel);
+        this.timesActivated = new Decimal(0);
+    }
+    updateEffect() {
+        super.updateEffect();
+        this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated, 0.7).multiply(game.jobLevelEffect).dividedBy(80).plus(1));
+        this.displayEffect = this.currentEffect;
     }
     jobEffect() {
         super.jobEffect();
@@ -35,12 +49,16 @@ class Job2 extends Job {
 }
 
 //Money job
-let job1 = new Job1('jobMoney', 'Job 1', 2, 1, 1, '+$@');
+let job1 = new Job1('jobMoney', 'Job 1', 2, 1, 1, 'Currently +$@ per completion', 0);
 jobs.push(job1);
 
-//job1 time job
-let job2 = new Job2('jobTime', 'Job 2', 10, 1, 1, '/@');
+//XP job
+let job2 = new Job2('jobXP', 'Job 2', 10, 1, 1, 'Currently multiplying XP by x@', 1);
 jobs.push(job2);
+
+//Time job
+let job3 = new Job3('jobTime', 'Job 3', 15, 1, 1, 'Currently dividing job times by /@', 3);
+jobs.push(job3);
 
 //Create job HTML
 for (let i = 0; i < jobs.length; i++) {
@@ -49,7 +67,7 @@ for (let i = 0; i < jobs.length; i++) {
     const job = document.createElement('div');
     job.setAttribute('class', 'jobContainer');
     job.innerHTML =
-    `<h2>${jobs[i].title}</h2>
+    `<h2 class="jobTitle">${jobs[i].title}</h2>
     <h3 class="jobIncomeDisplay">Currently: ${displayString}</h3>
     <div class="singleJobProgressContainer" jobId="1">
         <div class="singleJobProgress">

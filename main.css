@@ -53,6 +53,8 @@
     --nav-bg: #929292;
     --goal-bg: #888888;
     --goal-progress-bar: #88ff7d;
+    --cannot-buy: #ff4343;
+    --can-buy: #49ff61;
 }
 
 * {
@@ -118,7 +120,6 @@ p {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
-    overflow-y: scroll;
 }
 
 .jobContainer {

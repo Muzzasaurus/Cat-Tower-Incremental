@@ -52,6 +52,7 @@ function updateJobLevel() {
     document.getElementById('jobLevelDisplay').innerHTML = `Job Level ${game.jobLevel}`;
     document.getElementById('jobXPDisplay').innerHTML = `${formatNum(game.jobXP)}/${formatNum(game.jobXPTarget)}`;
     document.getElementById('jobEffectDisplay').innerHTML = `Job Effect: x${formatNum(game.jobLevelEffect)}`;
+    document.getElementById('jobXPGainDisplay').innerHTML = `Each job earns ${formatNum(game.jobXPGain)} job XP per completion`;
 }
 
 function updateJobBars() {
@@ -75,17 +76,47 @@ function formatNum(num) {
 }
 
 function updateJobNumbers() {
+    //Money display
     document.getElementById('moneyCount').innerHTML = `$${formatNum(game.money)}`;
+
+    //Check if jobs are locked or unlocked
+    for (let i = 0; i < jobs.length; i++) {
+        if (game.jobLevel.greaterThanOrEqualTo(jobs[i].unlockLevel)) {
+            jobs[i].unlocked = true;
+        }
+    }
+    
+    //Job timer number update
     const jobsTimers = document.getElementsByClassName('jobTimer');
     for (let i = 0; i < jobsTimers.length; i++) {
-        jobsTimers[i].innerHTML = `${formatTimeS(jobs[i].timeRemaining)}s`;
+        if (jobs[i].unlocked) {
+            jobsTimers[i].innerHTML = `${formatTimeS(jobs[i].timeRemaining)}s`;
+        } else {
+            jobsTimers[i].innerHTML = '∞'
+        }
     }
+
+    //Job description update
     const jobsIncomes = document.getElementsByClassName('jobIncomeDisplay');
     for (let i = 0; i < jobsIncomes.length; i++) {
-        jobs[i].updateEffect();
-        let displayString = jobs[i].displayEffectString.replace('@', formatNum(jobs[i].displayEffect));
+        if (jobs[i].unlocked) {
+            jobs[i].updateEffect();
+            let displayString = jobs[i].displayEffectString.replace('@', formatNum(jobs[i].displayEffect));
 
-        jobsIncomes[i].innerHTML = `Currently ${displayString}`;
+            jobsIncomes[i].innerHTML = displayString;
+        } else {
+            jobsIncomes[i].innerHTML = `Unlock at level ${jobs[i].unlockLevel}`;
+        }
+    }
+
+    //Job title update
+    const jobsTitles = document.getElementsByClassName('jobTitle');
+    for (let i = 0; i < jobsTitles.length; i++) {
+        if (jobs[i].unlocked) {
+            jobsTitles[i].innerHTML = jobs[i].title;
+        } else {
+            jobsTitles[i].innerHTML = 'LOCKED';
+        }
     }
 }
 
@@ -102,6 +133,11 @@ function updateUpgrades() {
 
         upgrades[i].getElementsByTagName('h3')[0].innerHTML = `${jobUpgrades[i].name}<span style="font-weight: 500; font-size: 1rem;"> - ${levelString}</span>`;
         upgrades[i].getElementsByTagName('p')[0].innerHTML = `${displayString}`;
-        upgrades[i].getElementsByTagName('h2')[0].innerHTML = `${formatNum(jobUpgrades[i].currentPrice)}`;
+        upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].innerHTML = `${formatNum(jobUpgrades[i].currentPrice)}`;
+        if (game.money.greaterThanOrEqualTo(jobUpgrades[i].currentPrice)) {
+            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--can-buy)';
+        } else {
+            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--cannot-buy';
+        }
     }
 }
