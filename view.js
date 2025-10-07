@@ -51,7 +51,7 @@ function updateJobLevel() {
     document.getElementById('jobProgress').style.background = `linear-gradient(90deg, var(--job-progress-bar) ${game.jobXP.dividedBy(game.jobXPTarget).multiply(100)}%, rgba(0, 0, 0, 0) 0%)`;
     document.getElementById('jobLevelDisplay').innerHTML = `Job Level ${game.jobLevel}`;
     document.getElementById('jobXPDisplay').innerHTML = `${formatNum(game.jobXP)}/${formatNum(game.jobXPTarget)}`;
-    document.getElementById('jobEffectDisplay').innerHTML = `Job Effect: x${formatNum(game.jobLevelEffect)}`;
+    document.getElementById('jobEffectDisplay').innerHTML = `Job Effect: x${formatNum(game.jobLevelEffect)} to all jobs`;
     document.getElementById('jobXPGainDisplay').innerHTML = `Each job earns ${formatNum(game.jobXPGain)} job XP per completion`;
 }
 

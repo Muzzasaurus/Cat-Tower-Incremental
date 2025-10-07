@@ -41,6 +41,7 @@ function mainLoop() {
     lastUpdate = now;
     //Logic
     updateJobTimes();
+    autoWorkJobs();
     updateXPGain();
     //Visual
     updateJobNumbers();

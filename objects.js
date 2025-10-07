@@ -1,5 +1,5 @@
 class Upgrade {
-    constructor(id, name, description, basePrice, priceExponent, levelBonusMilestone, levelBonusEffect, upgradeLimit, upgradeEffect, icon) {
+    constructor(id, name, description, basePrice, priceExponent, levelBonusMilestone, levelBonusEffect, upgradeLimit, upgradeEffect, icon, baseEffect) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -10,7 +10,7 @@ class Upgrade {
         this.upgradeLimit = new Decimal(upgradeLimit);
         this.levelBonusMilestone = levelBonusMilestone;
         this.levelBonusEffect = levelBonusEffect;
-        this.effectValue = new Decimal(1);
+        this.effectValue = new Decimal(baseEffect);
         this.upgradeEffect = new Decimal(upgradeEffect);
         this.icon = icon;
     }
@@ -52,6 +52,7 @@ class Job {
         this.displayEffectString = displayEffectString;
         this.unlockLevel = new Decimal(unlockLevel);
         this.unlocked = false;
+        this.autoWork = false;
     }
     updateEffect() {
         this.currentTime = this.baseTime / jobs.find(x => x.id == 'jobTime').currentEffect.toNumber();
@@ -64,14 +65,25 @@ class Job {
     }
     updateTime() {
         if (this.active) {
-            //subtract time
-            this.timeRemaining -= deltaTime/1000;
-            //check if time is less than 0
-            if (this.timeRemaining <= 0) {
-                this.active = false;
-                this.timeRemaining = this.currentTime;
-                this.effectTriggers = this.effectTriggers.plus(1);
-                this.jobEffect();
+            if (this.autoWork) {
+                this.timeRemaining -= deltaTime/1000;
+                if (this.timeRemaining <= 0) {
+                    //this.effectTriggers = this.effectTriggers.plus(Math.floor(deltaTime/1000-this.timeRemaining)).plus(1);
+                    this.effectTriggers = this.effectTriggers.plus(Math.floor(Math.abs(this.timeRemaining)/this.currentTime)).plus(1);
+                    this.timeRemaining = this.currentTime-Math.max(0,Math.abs(this.timeRemaining)%this.currentTime);
+                    //this.timeRemaining = this.currentTime-Math.max(0,deltaTime/1000-this.timeRemaining);
+                    this.jobEffect();
+                }
+            } else {
+                //subtract time
+                this.timeRemaining -= deltaTime/1000;
+                //check if time is less than 0
+                if (this.timeRemaining <= 0) {
+                    this.active = false;
+                    this.timeRemaining = this.currentTime;
+                    this.effectTriggers = this.effectTriggers.plus(1);
+                    this.jobEffect();
+                }
             }
         }
         if (this.timeRemaining > this.currentTime) {
@@ -79,6 +91,6 @@ class Job {
         }
     }
     jobEffect() {
-        addJobXP(game.jobXPGain.multiply(this.xpMult));
+        addJobXP(game.jobXPGain.multiply(this.xpMult).multiply(this.effectTriggers));
     }
 }

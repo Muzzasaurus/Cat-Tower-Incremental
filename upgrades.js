@@ -53,19 +53,29 @@ class Upgrade2 extends Upgrade {
     }
     calculateEffect() {
         if (this.upgradeLevel.notEquals(0)) {
-            this.effectValue = this.upgradeLevel.multiply(this.upgradeEffect).plus(1).multiply(Decimal.pow(this.levelBonusEffect, Decimal.floor(this.upgradeLevel.dividedBy(this.levelBonusMilestone))));
+            this.effectValue = this.upgradeLevel.multiply(this.upgradeEffect).multiply(Decimal.pow(this.levelBonusEffect, Decimal.floor(this.upgradeLevel.dividedBy(this.levelBonusMilestone))));
         } else {
-            this.effectValue = this.upgradeLevel.multiply(this.upgradeEffect).plus(1);
+            this.effectValue = this.upgradeLevel.multiply(this.upgradeEffect)
+        }
+        for (let i = 0; i < jobs.length; i++) {
+            if (this.effectValue.greaterThanOrEqualTo(i+1)) {
+                jobs[i].autoWork = true;
+            } else {
+                jobs[i].autoWork = false;
+            }
         }
     }
 }
 
 //Income upgrade
-let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>+50%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 5, 1.2, 25, 2, 1000, 0.5, 'Assets/Images/GCIUpgradeBase.png');
+let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>+50%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 5, 1.2, 25, 2, 1000, 0.5, 'Assets/Images/GCIUpgradeBase.png', 1);
 jobUpgrades.push(upgrade1);
 
-let upgrade2 = new Upgrade1('basicXP', 'Basic XP', 'Increases job XP earned by <b>+25%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 50, 1.2, 25, 2, 1000, 0.25, 'Assets/Images/GCIUpgradeBase.png');
+let upgrade2 = new Upgrade1('basicXP', 'Basic XP', 'Increases job XP earned by <b>+25%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 50, 1.2, 25, 2, 1000, 0.25, 'Assets/Images/GCIUpgradeBase.png', 1);
 jobUpgrades.push(upgrade2);
+
+let upgrade3 = new Upgrade2('jobAuto', 'Job Automation', 'Automatically works jobs for you<br><b>Currently @</b>', 200, 100, 0, 1, 4, 1, 'Assets/Images/GCIUpgradeBase.png', 0);
+jobUpgrades.push(upgrade3);
 
 //Create upgrade HTML
 for (let i = 0; i < jobUpgrades.length; i++) {
