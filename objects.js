@@ -1,12 +1,16 @@
 class Upgrade {
-    constructor(id, name, description, basePrice, priceExponent, levelBonusMilestone, levelBonusEffect, upgradeLimit, upgradeEffect, icon, baseEffect) {
+    constructor(id, name, description, basePrice, priceExponent, levelBonusMilestone, levelBonusEffect, upgradeLimit, upgradeEffect, icon, baseEffect, upgradeLevel = 0, currentPrice = 0) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.basePrice = new Decimal(basePrice);
-        this.currentPrice = this.basePrice;
+        if (currentPrice == 0) {
+            this.currentPrice = this.basePrice;
+        } else {
+            this.currentPrice = new Decimal(currentPrice);
+        }
         this.priceExponent = new Decimal(priceExponent);
-        this.upgradeLevel = new Decimal(0);
+        this.upgradeLevel = new Decimal(upgradeLevel);
         this.upgradeLimit = new Decimal(upgradeLimit);
         this.levelBonusMilestone = levelBonusMilestone;
         this.levelBonusEffect = levelBonusEffect;
@@ -37,13 +41,21 @@ class Upgrade {
 }
 
 class Job {
-    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
+    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel, timeRemaining = -1, active = false, unlocked = false, autoWork = false, timesActivated = 0, currentTime = -1) {
         this.id = id;
         this.title = title;
         this.baseTime = baseTime;
-        this.currentTime = this.baseTime;
-        this.timeRemaining = this.baseTime;
-        this.active = false;
+        if (currentTime == -1) {
+            this.currentTime = this.baseTime;
+        } else {
+            this.currentTime = currentTime;
+        }
+        if (timeRemaining == -1) {
+            this.timeRemaining = this.baseTime;
+        } else {
+            this.timeRemaining = new Decimal (timeRemaining);
+        }
+        this.active = active;
         this.xpMult = xpMult;
         this.baseEffect = new Decimal(baseEffect);
         this.currentEffect = this.baseEffect;
@@ -51,8 +63,9 @@ class Job {
         this.effectTriggers = new Decimal(0);
         this.displayEffectString = displayEffectString;
         this.unlockLevel = new Decimal(unlockLevel);
-        this.unlocked = false;
-        this.autoWork = false;
+        this.unlocked = unlocked;
+        this.autoWork = autoWork;
+        this.timesActivated = new Decimal(timesActivated);
     }
     updateEffect() {
         this.currentTime = this.baseTime / jobs.find(x => x.id == 'jobTime').currentEffect.toNumber();

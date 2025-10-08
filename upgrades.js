@@ -76,7 +76,7 @@ let upgrade2 = new Upgrade1('basicXP', 'Basic XP', 'Increases job XP earned by <
 jobUpgrades.push(upgrade2);
 
 //Auto work upgrade
-let upgrade3 = new Upgrade2('jobAuto', 'Job Automation', 'Automatically works jobs for you<br><b>Currently @</b>', 200, 5, 0, 1, 4, 1, 'Assets/Images/GCIUpgradeBase.png', 0);
+let upgrade3 = new Upgrade2('jobAuto', 'Job Automation', 'Automatically works jobs for you<br><b>Currently @</b>', 200, 8, 0, 1, 4, 1, 'Assets/Images/GCIUpgradeBase.png', 0);
 jobUpgrades.push(upgrade3);
 
 //Create upgrade HTML
@@ -100,7 +100,12 @@ for (let i = 0; i < jobUpgrades.length; i++) {
         <button class="upgradeButton">Buy Max</button>
     </div>`
     //Add Buy button listeners
-    upgrade.getElementsByClassName('upgradeButton')[0].addEventListener('click', jobUpgrades[i].buyUpgrade.bind(jobUpgrades[i]));
-    upgrade.getElementsByClassName('upgradeButton')[1].addEventListener('click', jobUpgrades[i].buyMaxUpgrades.bind(jobUpgrades[i]));
+    jobUpgrades[i].buyHandler = jobUpgrades[i].buyUpgrade.bind(jobUpgrades[i]);
+    jobUpgrades[i].buyButton = upgrade.getElementsByClassName('upgradeButton')[0];
+    jobUpgrades[i].buyMaxHandler = jobUpgrades[i].buyMaxUpgrades.bind(jobUpgrades[i]);
+    jobUpgrades[i].buyMaxButton = upgrade.getElementsByClassName('upgradeButton')[1];
+
+    upgrade.getElementsByClassName('upgradeButton')[0].addEventListener('click', jobUpgrades[i].buyHandler);
+    upgrade.getElementsByClassName('upgradeButton')[1].addEventListener('click', jobUpgrades[i].buyMaxHandler);
     UPGRADE_CONTAINER.append(upgrade);
 }

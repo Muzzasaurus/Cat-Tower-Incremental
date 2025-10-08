@@ -6,13 +6,16 @@ function addNavListeners() {
 }
 
 function toggleTab(event) {
-    const elem = document.getElementById(`${event.target.getAttribute('tabValue')}`);
-    if (elem.style.display != 'none') {
-        elem.style.display = 'none';
-    } else {
-        elem.style.display = 'flex';
+    let attribute = event.target.getAttribute('tabValue');
+    if (attribute !== null) {
+        const elem = document.getElementById(attribute);
+        if (elem.style.display != 'none') {
+            elem.style.display = 'none';
+        } else {
+            elem.style.display = 'flex';
+        }
+        updateView();
     }
-    updateView();
 }
 
 function addJobListeners() {

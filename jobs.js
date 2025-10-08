@@ -15,10 +15,6 @@ class Job1 extends Job {
 }
 
 class Job2 extends Job {
-    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
-        super(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel);
-        this.timesActivated = new Decimal(0);
-    }
     updateEffect() {
         super.updateEffect();
         this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated.multiply(game.jobLevelEffect), 0.5).dividedBy(20).plus(1));
@@ -32,10 +28,6 @@ class Job2 extends Job {
 }
 
 class Job3 extends Job {
-    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
-        super(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel);
-        this.timesActivated = new Decimal(0);
-    }
     updateEffect() {
         super.updateEffect();
         this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated.multiply(game.jobLevelEffect), 0.7).dividedBy(80).plus(1));
@@ -49,10 +41,6 @@ class Job3 extends Job {
 }
 
 class Job4 extends Job {
-    constructor(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel) {
-        super(id, title, baseTime, xpMult, baseEffect, displayEffectString, unlockLevel);
-        this.timesActivated = new Decimal(0);
-    }
     updateEffect() {
         super.updateEffect();
         this.currentEffect = this.timesActivated.dividedBy(100).multiply(game.jobLevelEffect).plus(1);
@@ -96,7 +84,9 @@ for (let i = 0; i < jobs.length; i++) {
         </div>
     </div>`
     //Add job start listeners
-    job.getElementsByClassName('jobTimer')[0].addEventListener('click', jobs[i].beginJob.bind(jobs[i]));
+    jobs[i].handler = jobs[i].beginJob.bind(jobs[i]);
+    jobs[i].button = job.getElementsByClassName('jobTimer')[0];
+    job.getElementsByClassName('jobTimer')[0].addEventListener('click', jobs[i].handler);
     JOBS_CONTAINER.append(job);
 }
 
