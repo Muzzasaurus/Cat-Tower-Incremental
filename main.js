@@ -25,7 +25,21 @@ function updateXPGain() {
     game.jobXPGain = game.jobXPBaseGain.multiply(jobs.find(x => x.id == 'jobXP').currentEffect).multiply(jobUpgrades.find(x => x.id == 'basicXP').effectValue);
 }
 
+//function findMaxUpgrades(basePrice, growthExponent, upgradesOwned, currencyOwned, spendCurrency)
+//function findBulkCost(basePrice, growthExponent, upgradesOwned, numToBuy)
 function addJobXP(xp) {
+    game.jobXP = game.jobXP.plus(xp);
+    if (game.jobXP.greaterThanOrEqualTo(game.jobXPTarget)) {
+        let levels = findMaxUpgrades(BASE_JOB_XP_TARGET, game.jobLevelExponent, game.jobLevel, game.jobXP, true);
+        let cost = findBulkCost(BASE_JOB_XP_TARGET, game.jobLevelExponent, game.jobLevel, levels);
+        game.jobLevel = game.jobLevel.plus(levels);
+        game.jobXP = game.jobXP.minus(cost);
+        game.jobXPTarget = Decimal.pow(game.jobLevelExponent, game.jobLevel).multiply(BASE_JOB_XP_TARGET);
+        game.jobLevelEffect = Decimal.pow(game.jobEffectExponent, game.jobLevel);
+    }
+}
+
+/*function addJobXP(xp) {
     game.jobXP = game.jobXP.plus(xp);
     while (game.jobXP.greaterThanOrEqualTo(game.jobXPTarget)) {
         game.jobLevel = game.jobLevel.plus(1);
@@ -33,7 +47,7 @@ function addJobXP(xp) {
         game.jobXPTarget = Decimal.pow(game.jobLevelExponent, game.jobLevel).multiply(BASE_JOB_XP_TARGET);
         game.jobLevelEffect = Decimal.pow(game.jobEffectExponent, game.jobLevel);
     }
-}
+}*/
 
 //Saving/Loading
 function save() {
