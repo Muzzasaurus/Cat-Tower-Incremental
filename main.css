@@ -55,6 +55,7 @@
     --goal-progress-bar: #88ff7d;
     --cannot-buy: #ff4343;
     --can-buy: #49ff61;
+    --maxed-upgrade: #ff91da;
 }
 
 * {
@@ -152,12 +153,14 @@ p {
     background-color: var(--job-secondary-bg);
     margin-top: 2rem;
     display: flex;
+    overflow-x: auto;
 }
 
 .jobUpgradeContainer {
     border: 3px solid black;
-    margin: 2rem;
-    width: 20rem;
+    margin: 1rem 0 1rem 1rem;
+    padding: 0.5rem;
+    width: 19rem;
     display: flex;
     flex-direction: column;
     align-items: center;

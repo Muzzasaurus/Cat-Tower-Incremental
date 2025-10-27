@@ -42,10 +42,12 @@ function updateView() {
             body.style.gridTemplateColumns = '1fr 10rem';
             break;
         case 2:
-            body.style.gridTemplateColumns = '1fr 1fr 10rem';
+            //body.style.gridTemplateColumns = '1fr 1fr 10rem';
+            body.style.gridTemplateColumns = 'calc(100% / 2 - 10rem / 2) calc(100% / 2 - 10rem / 2) 10rem';
             break;
         case 3:
-            body.style.gridTemplateColumns = '1fr 1fr 1fr 10rem';
+            //body.style.gridTemplateColumns = '1fr 1fr 1fr 10rem';
+            body.style.gridTemplateColumns = 'calc(100% / 3 - 10rem / 3) calc(100% / 3 - 10rem / 3) calc(100% / 3 - 10rem / 3) 10rem';
             break;
     }
 }
@@ -54,7 +56,7 @@ function updateJobLevel() {
     document.getElementById('jobProgress').style.background = `linear-gradient(90deg, var(--job-progress-bar) ${game.jobXP.dividedBy(game.jobXPTarget).multiply(100)}%, rgba(0, 0, 0, 0) 0%)`;
     document.getElementById('jobLevelDisplay').innerHTML = `Job Level ${game.jobLevel}`;
     document.getElementById('jobXPDisplay').innerHTML = `${formatNum(game.jobXP)}/${formatNum(game.jobXPTarget)}`;
-    document.getElementById('jobEffectDisplay').innerHTML = `Job Effect: x${formatNum(game.jobLevelEffect)} to all jobs`;
+    document.getElementById('jobEffectDisplay').innerHTML = `Job level effect: x${formatNum(game.jobLevelEffect)} to money gain`;
     document.getElementById('jobXPGainDisplay').innerHTML = `Each job earns ${formatNum(game.jobXPGain)} job XP per completion`;
 }
 
@@ -70,12 +72,13 @@ function updateGoalProgress() {
 }
 
 function formatTimeS(time) {
-    return Math.round(time*100)/100;
+    return time.toFixed(2);
 }
 
 function formatNum(num) {
     //return num.multiply(100).round().dividedBy(100);
-    return num.toFixed(2);
+    //return num.toFixed(2);
+    return num.toString()
 }
 
 function updateJobNumbers() {
@@ -136,11 +139,16 @@ function updateUpgrades() {
 
         upgrades[i].getElementsByTagName('h3')[0].innerHTML = `${jobUpgrades[i].name}<span style="font-weight: 500; font-size: 1rem;"> - ${levelString}</span>`;
         upgrades[i].getElementsByTagName('p')[0].innerHTML = `${displayString}`;
-        upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].innerHTML = `${formatNum(jobUpgrades[i].currentPrice)}`;
-        if (game.money.greaterThanOrEqualTo(jobUpgrades[i].currentPrice)) {
-            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--can-buy)';
+        if (jobUpgrades[i].upgradeLevel.equals(jobUpgrades[i].upgradeLimit) && jobUpgrades[i].upgradeLimit.notEquals(0)) {
+            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].innerHTML = `MAXED`;
+            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--maxed-upgrade)';
         } else {
-            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--cannot-buy';
+            upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].innerHTML = `${formatNum(jobUpgrades[i].currentPrice)}`;
+            if (game.money.greaterThanOrEqualTo(jobUpgrades[i].currentPrice)) {
+                upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--can-buy)';
+            } else {
+                upgrades[i].getElementsByClassName('upgradePriceDisplay')[0].style.color = 'var(--cannot-buy';
+            }
         }
     }
 }

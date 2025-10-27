@@ -13,7 +13,7 @@ const game = {
     jobXPTarget: BASE_JOB_XP_TARGET,
     jobLevelExponent: new Decimal(1.4),
     jobLevelEffect: new Decimal(1),
-    jobEffectExponent: new Decimal(1.1)
+    jobEffectMultiplier: new Decimal(0.1)
 };
 
 for (let i = 0; i < game.jobTimes; i++) {
@@ -35,7 +35,8 @@ function addJobXP(xp) {
         game.jobLevel = game.jobLevel.plus(levels);
         game.jobXP = game.jobXP.minus(cost);
         game.jobXPTarget = Decimal.pow(game.jobLevelExponent, game.jobLevel).multiply(BASE_JOB_XP_TARGET);
-        game.jobLevelEffect = Decimal.pow(game.jobEffectExponent, game.jobLevel);
+        //game.jobLevelEffect = Decimal.pow(game.jobEffectExponent, game.jobLevel);
+        game.jobLevelEffect = game.jobLevel.multiply(game.jobLevel.plus(1)).dividedBy(2).multiply(game.jobEffectMultiplier).plus(1);
     }
 }
 
@@ -98,6 +99,7 @@ function load() {
         switch (saveData.jobUpgrades[i].id) {
             case 'basicMoney':
             case 'basicXP':
+            case 'basicTime':
                 upgrade = Object.assign(new Upgrade1(saveData.jobUpgrades[i].id, saveData.jobUpgrades[i].name, saveData.jobUpgrades[i].description, saveData.jobUpgrades[i].basePrice, saveData.jobUpgrades[i].priceExponent, saveData.jobUpgrades[i].levelBonusMilestone, saveData.jobUpgrades[i].levelBonusEffect, saveData.jobUpgrades[i].upgradeLimit, saveData.jobUpgrades[i].upgradeEffect, saveData.jobUpgrades[i].icon, saveData.jobUpgrades[i].baseEffect, saveData.jobUpgrades[i].upgradeLevel, saveData.jobUpgrades[i].currentPrice));
                 tempUpgrades.push(upgrade);
                 break;
@@ -135,6 +137,9 @@ function mainLoop() {
     var now = Date.now();
     deltaTime = now - lastUpdate;
     lastUpdate = now;
+    if (game.money.lessThan(0)) {
+        game.money = new Decimal(0);
+    }
     //Logic
     updateJobTimes();
     autoWorkJobs();

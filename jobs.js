@@ -17,7 +17,7 @@ class Job1 extends Job {
 class Job2 extends Job {
     updateEffect() {
         super.updateEffect();
-        this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated.multiply(game.jobLevelEffect), 0.5).dividedBy(20).plus(1));
+        this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated, 0.5).dividedBy(20)/*.multiply(game.jobLevelEffect)*/.plus(1));
         this.displayEffect = this.currentEffect;
     }
     jobEffect() {
@@ -30,7 +30,7 @@ class Job2 extends Job {
 class Job3 extends Job {
     updateEffect() {
         super.updateEffect();
-        this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated.multiply(game.jobLevelEffect), 0.7).dividedBy(80).plus(1));
+        this.currentEffect = this.baseEffect.multiply(Decimal.pow(this.timesActivated, 0.7).dividedBy(50)/*.multiply(game.jobLevelEffect)*/.plus(1));
         this.displayEffect = this.currentEffect;
     }
     jobEffect() {
@@ -43,7 +43,7 @@ class Job3 extends Job {
 class Job4 extends Job {
     updateEffect() {
         super.updateEffect();
-        this.currentEffect = this.timesActivated.dividedBy(100).multiply(game.jobLevelEffect).plus(1);
+        this.currentEffect = this.timesActivated.dividedBy(100)/*.multiply(game.jobLevelEffect)*/.plus(1);
         this.displayEffect = this.currentEffect;
     }
     jobEffect() {
@@ -58,15 +58,15 @@ let job1 = new Job1('jobMoney', 'Job 1', 2, 1, 1, '+$@ per completion', 0);
 jobs.push(job1);
 
 //Money boost job
-let job2 = new Job4('jobBoost', 'Job 2', 5, 1, 1, 'Currently multiplying money gain by x@', 1);
+let job2 = new Job4('jobBoost', 'Job 2', 5, 1, 1, 'Currently multiplying money gain by x@', 2);
 jobs.push(job2);
 
 //XP job
-let job3 = new Job3('jobXP', 'Job 3', 10, 1, 1, 'Currently multiplying XP by x@', 2);
+let job3 = new Job3('jobXP', 'Job 3', 10, 1, 1, 'Currently multiplying XP by x@', 5);
 jobs.push(job3);
 
 //Time job
-let job4 = new Job2('jobTime', 'Job 4', 15, 1, 1, 'Currently dividing job times by /@', 5);
+let job4 = new Job2('jobTime', 'Job 4', 30, 1, 1, 'Currently dividing job times by /@', 10);
 jobs.push(job4);
 
 //Create job HTML

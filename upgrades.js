@@ -68,16 +68,21 @@ class Upgrade2 extends Upgrade {
 }
 
 //Income upgrade
-let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>+50%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 5, 1.2, 25, 2, 1000, 0.5, 'Assets/Images/GCIUpgradeBase.png', 1);
+let upgrade1 = new Upgrade1('basicMoney', 'Basic Job Income', 'Increases money earned by <b>+50%</b> per level.<br>This effect is <b>doubled</b> every <b>20</b> levels.<br><b>Currently x@</b>', 5, 1.2, 20, 2, 0, 0.5, 'Assets/Images/GCIUpgradeBase.png', 1);
 jobUpgrades.push(upgrade1);
 
 //XP upgrade
-let upgrade2 = new Upgrade1('basicXP', 'Basic XP', 'Increases job XP earned by <b>+25%</b> per level.<br>This effect is <b>doubled</b> every <b>25</b> levels.<br><b>Currently x@</b>', 50, 1.2, 25, 2, 1000, 0.25, 'Assets/Images/GCIUpgradeBase.png', 1);
+let upgrade2 = new Upgrade1('basicXP', 'Basic XP', 'Increases job XP earned by <b>+25%</b> per level.<br>This effect is <b>doubled</b> every <b>20</b> levels.<br><b>Currently x@</b>', 50, 1.2, 20, 2, 0, 0.25, 'Assets/Images/GCIUpgradeBase.png', 1);
 jobUpgrades.push(upgrade2);
 
-//Auto work upgrade
-let upgrade3 = new Upgrade2('jobAuto', 'Job Automation', 'Automatically works jobs for you<br><b>Currently @</b>', 200, 8, 0, 1, 4, 1, 'Assets/Images/GCIUpgradeBase.png', 0);
+//Job time upgrade
+let upgrade3 = new Upgrade1('basicTime', 'Job Time', 'Divides job durations by <b>/1.05</b> per level.<br><b>Currently /@</b>', 100, 1.4, 0, 1, 100, 0.05, 'Assets/Images/GCIUpgradeBase.png', 1);
 jobUpgrades.push(upgrade3);
+
+//Auto work upgrade
+let upgrade4 = new Upgrade2('jobAuto', 'Job Automation', 'Automatically works jobs for you<br><b>Currently @</b>', 500, 9, 0, 1, 4, 1, 'Assets/Images/GCIUpgradeBase.png', 0);
+jobUpgrades.push(upgrade4);
+
 
 //Create upgrade HTML
 for (let i = 0; i < jobUpgrades.length; i++) {

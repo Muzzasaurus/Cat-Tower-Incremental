@@ -56,7 +56,7 @@ class Job {
             this.timeRemaining = new Decimal(timeRemaining);
         }
         this.active = active;
-        this.xpMult = xpMult;
+        this.xpMult = new Decimal(xpMult);
         this.baseEffect = new Decimal(baseEffect);
         this.currentEffect = this.baseEffect;
         this.displayEffect = this.currentEffect;
@@ -68,7 +68,7 @@ class Job {
         this.timesActivated = new Decimal(timesActivated);
     }
     updateEffect() {
-        this.currentTime = this.baseTime.dividedBy(jobs.find(x => x.id == 'jobTime').currentEffect);
+        this.currentTime = this.baseTime.dividedBy(jobs.find(x => x.id == 'jobTime').currentEffect).dividedBy(jobUpgrades.find(x => x.id == 'basicTime').effectValue);
     }
     beginJob() {
         if ((!this.active) && (this.unlocked)) {
@@ -82,10 +82,9 @@ class Job {
                 this.timeRemaining = this.timeRemaining.minus(new Decimal(deltaTime).dividedBy(1000));
                 if (this.timeRemaining.lessThanOrEqualTo(0)) {
                     this.effectTriggers = this.effectTriggers.plus((this.timeRemaining).abs().dividedBy(this.currentTime).floor()).plus(1);
-                    //Figure out the issue with this line
-                    this.timeRemaining = this.currentTime.minus(this.timeRemaining.abs().dividedBy(this.currentTime));
-                    //This shouldn't be needed but the game currently doesn't work without it
+                    this.timeRemaining = this.currentTime.minus(this.timeRemaining.abs().minus(this.timeRemaining.abs().dividedBy(this.currentTime).floor()));
                     if (this.timeRemaining.lessThan(0)) {
+                        console.log(this.timeRemaining);
                         this.timeRemaining = new Decimal(0);
                     }
                     this.jobEffect();
