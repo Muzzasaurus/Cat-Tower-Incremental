@@ -75,10 +75,54 @@ function formatTimeS(time) {
     return time.toFixed(2);
 }
 
-function formatNum(num) {
+function formatNum(num, decimals = 2) {
     //return num.multiply(100).round().dividedBy(100);
     //return num.toFixed(2);
-    return num.toString()
+    let str = num.toString();
+    let fullstop = str.indexOf('.');
+    let lettere = str.indexOf('e');
+    let dec = '';
+    let exp = '';
+    if (num.lessThan(new Decimal('1e16'))) {
+        if (fullstop != -1) {
+            //Decimal is present
+            dec = str.slice(fullstop);
+            str = str.slice(0, fullstop);
+            //Round decimals
+            dec = Math.round(parseFloat(dec)*Math.pow(10, decimals)).toString();
+            //Add back any zeros that are cut off from increasing the number's OOM
+            if (dec.length < decimals) {
+                dec = dec.padStart(decimals, '0');
+            }
+        }
+        //Add commas
+        let commas = Math.floor((str.length-1)/3);
+        for (let i = 0; i < commas; i++) {
+            str = str.slice(0, -4*i-3) + ',' + str.slice(-4*i-3);
+        }
+    } else {
+        exp = str.slice(lettere);
+        str = str.slice(0, lettere);
+        if (fullstop != -1) {
+            dec = str.slice(fullstop);
+            str = str.slice(0, fullstop);
+            //Round decimals
+            dec = Math.round(parseFloat(dec)*Math.pow(10, decimals)).toString();
+            //Add back any zeros that are cut off from increasing the number's OOM
+            if (dec.length < decimals) {
+                dec = dec.padStart(decimals, '0');
+            }
+        }
+    }
+    //Add formatted decimals back to number
+    if ((dec != '') && (dec != '00')) {
+        str += '.' + dec;
+    }
+    //Add e back to number
+    if (exp != '') {
+        str += exp;
+    }
+    return str;
 }
 
 function updateJobNumbers() {
