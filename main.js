@@ -55,13 +55,15 @@ function save() {
     const saveData = {
         game: game,
         jobs: jobs,
-        jobUpgrades: jobUpgrades
+        jobUpgrades: jobUpgrades,
+        settings: settings
     };
 	localStorage.setItem("saveData", JSON.stringify(saveData));
 }
 
 function load() {
 	if (localStorage.saveData) saveData = JSON.parse(localStorage.getItem("saveData"));
+    settings.numberDisplay = saveData.settings.numberDisplay;
     game.money = new Decimal(saveData.game.money);
     game.jobLevel = new Decimal(saveData.game.jobLevel);
     game.jobXP = new Decimal(saveData.game.jobXP);

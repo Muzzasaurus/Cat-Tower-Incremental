@@ -53,7 +53,7 @@ function updateView() {
 }
 
 function updateJobLevel() {
-    document.getElementById('jobProgress').style.background = `linear-gradient(90deg, var(--job-progress-bar) ${game.jobXP.dividedBy(game.jobXPTarget).multiply(100)}%, rgba(0, 0, 0, 0) 0%)`;
+    document.getElementById('jobProgress').style.background = `linear-gradient(90deg, var(--job-progress-bar) ${Decimal.min(100, game.jobXP.dividedBy(game.jobXPTarget).multiply(100))}%, rgba(0, 0, 0, 0) 0%)`;
     document.getElementById('jobLevelDisplay').innerHTML = `Job Level ${game.jobLevel}`;
     document.getElementById('jobXPDisplay').innerHTML = `${formatNum(game.jobXP)}/${formatNum(game.jobXPTarget)}`;
     document.getElementById('jobEffectDisplay').innerHTML = `Job level effect: x${formatNum(game.jobLevelEffect)} to money gain`;
@@ -63,17 +63,19 @@ function updateJobLevel() {
 function updateJobBars() {
     const bars = document.querySelectorAll('.singleJobProgress');
     for (let i = 0; i < bars.length; i++) {
-        bars[i].style.background = `linear-gradient(90deg, var(--job-progress-bar) ${100-jobs[i].timeRemaining/jobs[i].currentTime*100}%, rgba(0, 0, 0, 0) 0%)`;
+        bars[i].style.background = `linear-gradient(90deg, var(--job-progress-bar) ${Decimal.min(100, 100-jobs[i].timeRemaining/jobs[i].currentTime*100)}%, rgba(0, 0, 0, 0) 0%)`;
     }
 }
 
 function updateGoalProgress() {
-    document.getElementById('goalProgressBar').style.background = `linear-gradient(90deg, var(--goal-progress-bar) ${game.money.dividedBy(100).multiply(100)}%, rgba(0, 0, 0, 0) 0%)`;
+    document.getElementById('goalProgressBar').style.background = `linear-gradient(90deg, var(--goal-progress-bar) ${Decimal.min(100, game.money.dividedBy(100).multiply(100))}%, rgba(0, 0, 0, 0) 0%)`;
 }
 
 function formatTimeS(time) {
     return time.toFixed(2);
 }
+
+const STANDARDLIMIT = new Decimal('1e3003');
 
 function formatNum(num, decimals = 2) {
     //return num.multiply(100).round().dividedBy(100);
@@ -83,7 +85,8 @@ function formatNum(num, decimals = 2) {
     let lettere = str.indexOf('e');
     let dec = '';
     let exp = '';
-    if (num.lessThan(new Decimal('1e16'))) {
+    let name = '';
+    if (num.lessThan(new Decimal('9e15'))) {
         if (fullstop != -1) {
             //Decimal is present
             dec = str.slice(fullstop);
@@ -93,36 +96,102 @@ function formatNum(num, decimals = 2) {
             //Add back any zeros that are cut off from increasing the number's OOM
             if (dec.length < decimals) {
                 dec = dec.padStart(decimals, '0');
+            //If decimal is .999, it will round up to 1, so increase int by 1 and remove decimal
+            } else if (dec.length > decimals) {
+                dec = '';
+                str = (parseInt(str)+1).toString();
             }
         }
-        //Add commas
-        let commas = Math.floor((str.length-1)/3);
-        for (let i = 0; i < commas; i++) {
-            str = str.slice(0, -4*i-3) + ',' + str.slice(-4*i-3);
+        if (num.lessThan(new Decimal('1e6'))) {
+            //Add commas
+            let commas = Math.floor((str.length-1)/3);
+            for (let i = 0; i < commas; i++) {
+                str = str.slice(0, -4*i-3) + ',' + str.slice(-4*i-3);
+            }
+        } else {
+            if (settings.numberDisplay == STANDARD) {
+                symbolNum = Math.floor((str.length-1)/3);
+                name = getSymbol(symbolNum);
+                numToDisplay = (str.length-1) % 3 + 1;
+                if (numToDisplay == 1) {
+                    dec = str.slice(numToDisplay, 3);
+                } else {
+                    dec = str.slice(numToDisplay, 4);
+                }
+                str = str.slice(0, (str.length-1) % 3 + 1);
+            } else if (settings.numberDisplay == SCIENTIFIC) {
+                exp = `e${str.length-1}`;
+                dec = str.slice(1, 3);
+                str = str.slice(0, 1);
+            }
         }
     } else {
         exp = str.slice(lettere);
         str = str.slice(0, lettere);
-        if (fullstop != -1) {
-            dec = str.slice(fullstop);
-            str = str.slice(0, fullstop);
-            //Round decimals
-            dec = Math.round(parseFloat(dec)*Math.pow(10, decimals)).toString();
-            //Add back any zeros that are cut off from increasing the number's OOM
-            if (dec.length < decimals) {
-                dec = dec.padStart(decimals, '0');
+        if (settings.numberDisplay == SCIENTIFIC || num.greaterThanOrEqualTo(STANDARDLIMIT)) {
+            if (fullstop != -1) {
+                dec = str.slice(fullstop);
+                str = str.slice(0, fullstop);
+                //Round decimals
+                dec = Math.round(parseFloat(dec)*Math.pow(10, decimals)).toString();
+                //Add back any zeros that are cut off from increasing the number's OOM
+                if (dec.length < decimals) {
+                    dec = dec.padStart(decimals, '0');
+                } else if (dec.length > decimals) {
+                    dec = '';
+                    str = (parseInt(str)+1).toString();
+                }
             }
+        } else if (settings.numberDisplay == STANDARD) {
+            expValue = parseFloat(exp.slice(1))
+            symbolNum = Math.floor(expValue/3);
+            name = getSymbol(symbolNum);
+
+            rawNum = str.replace('.', '').padEnd(decimals+1, '0');
+            numToDisplay = expValue % 3 + 1
+            str = rawNum.slice(0, numToDisplay);
+            if (numToDisplay == 1) {
+                dec = rawNum.slice(numToDisplay, 3);
+            } else {
+                dec = rawNum.slice(numToDisplay, 4);
+            }
+            exp = '';
         }
     }
     //Add formatted decimals back to number
-    if ((dec != '') && (dec != '00')) {
-        str += '.' + dec;
+    if ((dec != '') && (dec != '0') && (dec != '00')) {
+        str += `.${dec}`;
+    }
+    //Add name of number to end of number
+    if (name != '') {
+        str += ` ${name}`;
     }
     //Add e back to number
     if (exp != '') {
         str += exp;
     }
     return str;
+}
+
+const standardPreE33 = ["K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No"];
+const standardUnits = ["", "U", "D", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No"];
+const standardTens = ["", "Dc", "Vg", "Tg", "Qag", "Qig", "Sxg", "Spg", "Ocg", "Nog"];
+const standardHundreds = ["", "Ct", "Dct", "Tct", "Qact", "Qict", "Sxct", "Spct", "Occt", "Noct"];
+const standardMilestonePreEE33 = ["", "Mi", "Mc", "Na", "Pc", "Fm", "At", "Zp", "Yc", "Xn", "Ve"];
+const standardMilestoneUnits = ["", "Me", "Du", "Tr", "Te", "Pe", "He", "Hp", "Ot", "En", "Ve"];
+const standardMilestoneTens = ["", "E", "Is", "Trc", "Tec", "Pec", "Hec", "Hpc", "Otc", "Enc"];
+const standardMilestoneHundreds = ["", "Ht", "Dh", "Trh", "Teh", "Peh", "Hxh", "Heh", "Oth", "Enh"];
+
+function getSymbol(num) {
+    num -= 1;
+    if (num <= 9) {
+        return standardPreE33[num];
+    } else {
+        let unit = num % 10;
+        let tens = Math.floor(num/10) % 10;
+        let hundreds = Math.floor(num/100) % 10;
+        return standardUnits[unit] + standardTens[tens] + standardHundreds[hundreds];
+    }
 }
 
 function updateJobNumbers() {
@@ -176,9 +245,9 @@ function updateUpgrades() {
         let displayString = jobUpgrades[i].description.replace('@', formatNum(jobUpgrades[i].effectValue));
         let levelString = '';
         if (jobUpgrades[i].upgradeLimit.equals(0)) {
-            levelString = `${jobUpgrades[i].upgradeLevel}`;
+            levelString = `${formatNum(jobUpgrades[i].upgradeLevel)}`;
         } else {
-            levelString = `${jobUpgrades[i].upgradeLevel}/${jobUpgrades[i].upgradeLimit}`;
+            levelString = `${formatNum(jobUpgrades[i].upgradeLevel)}/${formatNum(jobUpgrades[i].upgradeLimit)}`;
         }
 
         upgrades[i].getElementsByTagName('h3')[0].innerHTML = `${jobUpgrades[i].name}<span style="font-weight: 500; font-size: 1rem;"> - ${levelString}</span>`;

@@ -62,7 +62,7 @@ let job2 = new Job4('jobBoost', 'Job 2', 5, 1, 1, 'Currently multiplying money g
 jobs.push(job2);
 
 //XP job
-let job3 = new Job3('jobXP', 'Job 3', 10, 1, 1, 'Currently multiplying XP by x@', 5);
+let job3 = new Job3('jobXP', 'Job 3', 10, 1, 1, 'Currently multiplying XP gain by x@', 5);
 jobs.push(job3);
 
 //Time job
